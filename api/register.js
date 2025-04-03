@@ -1,15 +1,14 @@
 export default async function handler(req, res) {
-  // ✅ CORS 허용 헤더 설정
+  // CORS 헤더 추가
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // ✅ 브라우저 사전 요청(OPTIONS) 응답
+  // OPTIONS 메서드에 대한 프리플라이트 요청 처리
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-  // ✅ POST만 허용
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -27,7 +26,7 @@ export default async function handler(req, res) {
     const text = await response.text();
     return res.status(200).send(text);
   } catch (error) {
-    console.error("프록시 오류:", error);
-    return res.status(500).json({ error: "프록시 서버 오류" });
+    console.error("프록시 서버 오류:", error);
+    return res.status(500).json({ error: "프록시 서버 내부 오류" });
   }
 }
